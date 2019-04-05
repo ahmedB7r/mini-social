@@ -13,7 +13,7 @@ const app = express();
 // Bodyparser Middleware
 app.use(express.json());
 
-// Passport Config
+// Passport Configaa
 require('./config/passport')(passport);
 
 // DB Config
@@ -23,7 +23,8 @@ const db = config.get('mongoURI');
 mongoose
   .connect(
     db,
-    { useNewUrlParser: true,    useCreateIndex: true
+    {
+      useNewUrlParser: true, useCreateIndex: true
     }
   )
   .then(() => console.log('MongoDB Connected'))
@@ -53,7 +54,7 @@ app.use(passport.session());
 app.use(flash());
 
 // Global variables
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.success_msg = req.flash('success_msg');
   res.locals.error_msg = req.flash('error_msg');
   res.locals.error = req.flash('error');
