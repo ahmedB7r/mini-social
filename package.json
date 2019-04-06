@@ -6,8 +6,8 @@
   "scripts": {
     "client-install": "npm install --prefix views",
     "start": "node app.js",
-    "server": "nodemon app.js",
     "client": "npm start --prefix views",
+    "server": "nodemon app.js --ignore client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",

@@ -5,7 +5,7 @@ import {
   DELETE_ITEM,
   ITEMS_LOADING,
   ITEMS_EDIT,
-  LIKE
+  LIKE, UNLIKE
 } from "./types";
 import { tokenConfig } from "./authActions";
 import { returnErrors } from "./errorActions";
@@ -65,9 +65,34 @@ export const editItem = (id, name) => (dispatch, getState) => {
     );
 };
 
-export const likeItem = (postId, userId) => (dispatch, getState) => {
-  console.log();
+export const likeItem = (itemId, userId) => (dispatch, getState) => {
+  axios
+    .put("/api/items/new/like/", { itemId, userId }, tokenConfig(getState))
+    .then(res =>
+      dispatch({
+        type: LIKE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch(returnErrors(err.response.data, err.response.status))
+    );
 };
+
+export const unlikeItem = (itemId, userId) => (dispatch, getState) => {
+  axios
+    .put("/api/items/new/unlike/", { itemId, userId }, tokenConfig(getState))
+    .then(res =>
+      dispatch({
+        type: UNLIKE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch(returnErrors(err.response.data, err.response.status))
+    );
+};
+
 
 export const setItemsLoading = () => {
   return {

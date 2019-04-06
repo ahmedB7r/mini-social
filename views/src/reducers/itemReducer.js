@@ -4,15 +4,16 @@ import {
   DELETE_ITEM,
   ITEMS_LOADING,
   ITEMS_EDIT,
-  LIKE
+  LIKE,
+  UNLIKE
 } from "../actions/types";
 
 const initialState = {
   items: [],
-  loading: false
+  loading: false,
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case GET_ITEMS:
       return {
@@ -45,12 +46,23 @@ export default function(state = initialState, action) {
       };
 
     case LIKE:
+      var itemss = state.items.filter(item => item._id === action.payload._id);
+      var num = state.items.indexOf(itemss[0]);
+
+      state.items.splice(num, 1, action.payload);
       return {
         ...state,
-        items: action.payload,
-        loading: false
-      };
+        items: state.items
 
+      };
+    case UNLIKE:
+      itemss = state.items.filter(item => item._id === action.payload._id);
+      num = state.items.indexOf(itemss[0]);
+      state.items.splice(num, 1, action.payload);
+      return {
+        ...state,
+        items: state.items
+      };
     default:
       return state;
   }

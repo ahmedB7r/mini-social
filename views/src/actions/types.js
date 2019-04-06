@@ -14,3 +14,5 @@ export const GET_ERRORS = "GET_ERRORS";
 export const CLEAR_ERRORS = "CLEAR_ERRORS";
 export const ITEMS_EDIT = "ITEMS_EDIT";
 export const LIKE = "LIKE";
+export const UNLIKE = "UNLIKE";
+

@@ -13,7 +13,7 @@ const app = express();
 // Bodyparser Middleware
 app.use(express.json());
 
-// Passport Configaa
+// Passport Config
 require('./config/passport')(passport);
 
 // DB Config

@@ -45,107 +45,40 @@ router.put("/:id", auth, (req, res) => {
   );
 });
 
-// @route   put api/items/:id
+// @route   put api/items/like/:id
 // @desc    like A Item
 // @access  private
-// router
-//   .put("/like", auth, (req, res) => {
-//     Item.findByIdAndUpdate(
-//       req.body.ids.postId,
-//       { $push: { likes: req.body.ids.userId } },
-//       { new: true }
-//     ).exec((err, result) => {
-//       if (err) {
-//         return res.status(400);
-//       }
-//       res.json(result);
-//     });
-//   })
-//   .then(response => {
-//     return response.json();
-//   })
-//   .catch(err => {
-//     console.log(err);
-//   });
+router.put("/new/like", auth, (req, res) => {
 
-// const like = (params, credentials, postId) => {
-//   return fetch("/api/posts/like/", {
-//     method: "PUT",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//       Authorization: "Bearer " + credentials.t
-//     },
-//     body: JSON.stringify({ userId: params.userId, postId: postId })
-//   })
-//     .then(response => {
-//       return response.json();
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
 
-// const unlike = (params, credentials, postId) => {
-//   return fetch("/api/posts/unlike/", {
-//     method: "PUT",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//       Authorization: "Bearer " + credentials.t
-//     },
-//     body: JSON.stringify({ userId: params.userId, postId: postId })
-//   })
-//     .then(response => {
-//       return response.json();
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
 
-// const comment = (params, credentials, postId, comment) => {
-//   return fetch("/api/posts/comment/", {
-//     method: "PUT",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//       Authorization: "Bearer " + credentials.t
-//     },
-//     body: JSON.stringify({
-//       userId: params.userId,
-//       postId: postId,
-//       comment: comment
-//     })
-//   })
-//     .then(response => {
-//       return response.json();
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
+  Item.findByIdAndUpdate(req.body.itemId, { $addToSet: { likes: req.body.userId } }, { new: true })
+    .then((item) => {
+      console.log(req.body);
 
-// const uncomment = (params, credentials, postId, comment) => {
-//   return fetch("/api/posts/uncomment/", {
-//     method: "PUT",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//       Authorization: "Bearer " + credentials.t
-//     },
-//     body: JSON.stringify({
-//       userId: params.userId,
-//       postId: postId,
-//       comment: comment
-//     })
-//   })
-//     .then(response => {
-//       return response.json();
-//     })
-//     .catch(err => {
-//       console.log(err);
-//     });
-// };
+
+      console.log(item.likes);
+
+      res.json(item);
+    })
+
+});
+// @route   put api/items/new/unlike/
+// @desc    unlike A Item
+// @access  private
+router.put("/new/unlike", auth, async (req, res) => {
+
+
+
+  await Item.findByIdAndUpdate(req.body.itemId, { $pull: { likes: req.body.userId } }, { new: true })
+    .then((item) => {
+      console.log(req.body);
+
+
+      console.log(item.likes);
+
+      res.json(item);
+    });
+});
 
 module.exports = router;

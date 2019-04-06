@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Container, ListGroup, ListGroupItem, Button } from "reactstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { connect } from "react-redux";
-import { getItems, deleteItem, likeItem } from "../actions/itemActions";
+import { getItems, deleteItem, likeItem, unlikeItem } from "../actions/itemActions";
 import PropTypes from "prop-types";
 import EditModal from "./EditModal";
 class ShoppingList extends Component {
@@ -13,18 +13,28 @@ class ShoppingList extends Component {
   onDeleteClick = id => {
     this.props.deleteItem(id);
   };
-  like = (postId, actions) => {
-    console.log(actions);
+  like = (likeIds) => {
+
+    this.props.likeItem(likeIds._id, likeIds.user._id);
+    // console.log(likeIds._id)
+
   };
+  unLike = (unLikeIds) => {
+    this.props.unlikeItem(unLikeIds._id, unLikeIds.user._id);
+
+
+  }
   render() {
     const { items } = this.props.item;
     const { isAuthenticated, user } = this.props.auth;
-
+    // const { userId } = this.props.auth;
+    // const userIdd = this.props.auth.user.userId;
+    console.log(items)
     return (
       <Container>
         <ListGroup>
           <TransitionGroup className="shopping-list">
-            {items.map(({ _id, name }) => (
+            {items.map(({ _id, name, likes }) => (
               <CSSTransition key={_id} timeout={500} classNames="fade">
                 <ListGroupItem>
                   <EditModal id={_id} />
@@ -37,26 +47,44 @@ class ShoppingList extends Component {
                   >
                     &times;
                   </Button>
-
-                  {isAuthenticated ? (
-                    <Button
-                      className="like-btn"
-                      color="primary"
-                      size="sm"
-                      // onClick={this.like.bind(this, _id)}
-                    >
-                      like
+                  <Button
+                    className="remove-btn ml-3"
+                    color="danger"
+                    size="sm"
+                  >
+                    {likes.length}
+                  </Button>
+                  {isAuthenticated ? likes.filter(like => like === user._id).toString() !== user._id
+                    ? (
+                      <Button
+                        className="like-btn ml-3"
+                        color="primary"
+                        size="sm"
+                        onClick={this.like.bind(this, { _id, user })}
+                      >
+                        like
+                      </Button>
+                    ) :
+                    (
+                      <Button
+                        className="like-btn ml-3"
+                        color="primary"
+                        size="sm"
+                        onClick={this.unLike.bind(this, { _id, user })}
+                      >
+                        unlike
                     </Button>
-                  ) : (
-                    <Button
-                      className="like-btn"
-                      color="primary"
-                      size="sm"
-                      disabled
-                    >
-                      like
+                    )
+                    : (
+                      <Button
+                        className="like-btn mx-3"
+                        color="primary"
+                        size="sm"
+                        disabled
+                      >
+                        sign in to like
                     </Button>
-                  )}
+                    )}
 
                   {name}
                 </ListGroupItem>
@@ -81,5 +109,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getItems, deleteItem, likeItem }
+  { getItems, deleteItem, likeItem, unlikeItem }
 )(ShoppingList);
