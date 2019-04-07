@@ -4,8 +4,7 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const ItemSchema = new Schema({
-  itemId: { type: Schema.Types.ObjectId, auto: true }
-  ,
+
 
   name: {
     type: String,
@@ -14,6 +13,13 @@ const ItemSchema = new Schema({
   likes: [{
     type: Schema.Types.ObjectId, ref: 'User', unique: true
   }],
+  comments: [{
+    text: String,
+    created: { type: Date, default: Date.now },
+    postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' }
+  }],
+  postedBy: { type: mongoose.Schema.ObjectId, ref: 'User' },
+
   date: { type: Date, default: Date.now }
 });
 

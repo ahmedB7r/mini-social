@@ -5,11 +5,12 @@ import {
   DELETE_ITEM,
   ITEMS_LOADING,
   ITEMS_EDIT,
-  LIKE, UNLIKE
+  LIKE, UNLIKE,
+  COMMENT
 } from "./types";
 import { tokenConfig } from "./authActions";
 import { returnErrors } from "./errorActions";
-
+let data, postId, all;
 export const getItems = () => dispatch => {
   dispatch(setItemsLoading());
   axios
@@ -25,9 +26,9 @@ export const getItems = () => dispatch => {
     );
 };
 
-export const addItem = item => (dispatch, getState) => {
+export const addItem = post => (dispatch, getState) => {
   axios
-    .post("/api/items", item, tokenConfig(getState))
+    .post("/api/items", post, tokenConfig(getState))
     .then(res =>
       dispatch({
         type: ADD_ITEM,
@@ -38,6 +39,7 @@ export const addItem = item => (dispatch, getState) => {
       dispatch(returnErrors(err.response.data, err.response.status))
     );
 };
+
 export const deleteItem = id => (dispatch, getState) => {
   axios
     .delete(`/api/items/${id}`, tokenConfig(getState))
@@ -54,12 +56,15 @@ export const deleteItem = id => (dispatch, getState) => {
 export const editItem = (id, name) => (dispatch, getState) => {
   axios
     .put(`/api/items/${id}`, name, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
+      data = res.data;
+      postId = id;
+      all = { data, postId };
       dispatch({
         type: ITEMS_EDIT,
-        payload: res.data
+        payload: all
       })
-    )
+    })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     );
@@ -68,12 +73,15 @@ export const editItem = (id, name) => (dispatch, getState) => {
 export const likeItem = (itemId, userId) => (dispatch, getState) => {
   axios
     .put("/api/items/new/like/", { itemId, userId }, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
+      data = res.data;
+      postId = itemId;
+      all = { data, postId };
       dispatch({
         type: LIKE,
-        payload: res.data
+        payload: all
       })
-    )
+    })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     );
@@ -82,17 +90,36 @@ export const likeItem = (itemId, userId) => (dispatch, getState) => {
 export const unlikeItem = (itemId, userId) => (dispatch, getState) => {
   axios
     .put("/api/items/new/unlike/", { itemId, userId }, tokenConfig(getState))
-    .then(res =>
+    .then(res => {
+      data = res.data;
+      postId = itemId;
+      all = { data, postId };
+
       dispatch({
         type: UNLIKE,
-        payload: res.data
+        payload: all
       })
-    )
+    })
     .catch(err =>
       dispatch(returnErrors(err.response.data, err.response.status))
     );
 };
-
+export const comment = post => (dispatch, getState) => {
+  axios
+    .put(`/api/items/new/comment/${post.postId}`, post, tokenConfig(getState))
+    .then(res => {
+      data = res.data;
+      postId = post.postId;
+      all = { data, postId };
+      dispatch({
+        type: COMMENT,
+        payload: all
+      })
+    })
+    .catch(err =>
+      dispatch(returnErrors(err.response.data, err.response.status))
+    );
+};
 
 export const setItemsLoading = () => {
   return {

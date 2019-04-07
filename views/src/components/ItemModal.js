@@ -32,7 +32,8 @@ class ItemModal extends Component {
     e.preventDefault();
 
     const newItem = {
-      name: this.state.name
+      name: this.state.name,
+      userId: this.props.auth.user._id
     };
 
     // Add item via addItem action
@@ -43,22 +44,32 @@ class ItemModal extends Component {
   };
 
   render() {
+    const { isAuthenticated } = this.props.auth;
+
     return (
       <div>
-        <Button
+
+        {isAuthenticated ? (<Button
           color="dark"
           style={{ marginBottom: '2rem' }}
           onClick={this.toggle}
         >
-          Add Item
-        </Button>
+          post
+        </Button>) : (<Button
+            color="dark"
+            style={{ marginBottom: '2rem' }}
+            disabled
+          >
+            sign in to post
+        </Button>)}
+
 
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Add To Shopping List</ModalHeader>
           <ModalBody>
             <Form onSubmit={this.onSubmit}>
               <FormGroup>
-                <Label for="item">Item</Label>
+                <Label for="item">your post</Label>
                 <Input
                   type="text"
                   name="name"
@@ -79,7 +90,9 @@ class ItemModal extends Component {
 }
 
 const mapStateToProps = state => ({
-  item: state.item
+  item: state.item,
+  auth: state.auth
+
 });
 
 export default connect(
