@@ -9,10 +9,10 @@ const Item = require("../../models/item");
 // @desc    Get All Items
 // @access  private
 router.get("/", (req, res) => {
-  Item.find().
+  Item.find({}, { comments: { $slice: -5 } }).
 
     populate('comments.postedBy', 'name')
-    .sort({ date: -1 })
+    .sort({ date: -1 }).limit(10)
     .then(items => res.json(items));
 });
 
@@ -75,9 +75,7 @@ router.put("/new/unlike", auth, (req, res) => {
 
 
   Item.findByIdAndUpdate(req.body.itemId, { $pull: { likes: req.body.userId } }, { new: true })
-    .
-
-    populate('comments.postedBy', 'name').then((item) => {
+    .then((item) => {
 
 
 
@@ -102,12 +100,12 @@ router.put("/new/comment/:id", auth, (req, res) => {
   }
 
 
-  Item.findByIdAndUpdate(req.params.id, { $push: { comments: comment } }, { new: true }).
+  Item.findByIdAndUpdate(req.params.id, { $push: { comments: comment } }, { new: true })
 
-    populate('comments.postedBy', 'name')
+    .populate('comments.postedBy', 'name')
     .then((item) => {
+      res.json(item.comments.slice(-5));
 
-      res.json(item.comments);
     }).catch(err => res.status(404).json({ success: false }));
 
 });
