@@ -40,7 +40,7 @@ class ShoppingList extends Component {
   like = (likeIds) => {
 
     this.props.likeItem(likeIds._id, likeIds.user._id);
-
+    console.log(likeIds)
   };
   unLike = (unLikeIds) => {
     this.props.unlikeItem(unLikeIds._id, unLikeIds.user._id);

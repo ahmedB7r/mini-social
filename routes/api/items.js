@@ -9,7 +9,7 @@ const Item = require("../../models/item");
 // @desc    Get All Items
 // @access  private
 router.get("/", (req, res) => {
-  Item.find({}, { comments: { $slice: -5 } }).
+  Item.find({}, { comments: { $slice: -2 } }).
 
     populate('comments.postedBy', 'name')
     .sort({ date: -1 }).limit(10)
@@ -49,14 +49,11 @@ router.put("/:id", auth, (req, res) => {
 // @route   put api/items/like/:id
 // @desc    like A Item
 // @access  private
-router.put("/new/like", auth, (req, res) => {
+router.put("/new/like/:id", auth, (req, res) => {
 
 
+  Item.findByIdAndUpdate(req.params.id, { $addToSet: { likes: req.body.userId } }, { new: true })
 
-  Item.findByIdAndUpdate(req.body.itemId, { $addToSet: { likes: req.body.userId } }, { new: true })
-    .
-
-    populate('comments.postedBy', 'name')
     .then((item) => {
 
 
@@ -102,9 +99,9 @@ router.put("/new/comment/:id", auth, (req, res) => {
 
   Item.findByIdAndUpdate(req.params.id, { $push: { comments: comment } }, { new: true })
 
-    .populate('comments.postedBy', 'name')
+    .populate('comments.postedBy', 'name _id')
     .then((item) => {
-      res.json(item.comments.slice(-5));
+      res.json(item.comments.slice(-2));
 
     }).catch(err => res.status(404).json({ success: false }));
 

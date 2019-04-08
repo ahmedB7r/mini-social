@@ -71,8 +71,10 @@ export const editItem = (id, name) => (dispatch, getState) => {
 };
 
 export const likeItem = (itemId, userId) => (dispatch, getState) => {
+  console.log(userId);
+
   axios
-    .put("/api/items/new/like/", { itemId, userId }, tokenConfig(getState))
+    .put(`/api/items/new/like/${itemId}`, { userId }, tokenConfig(getState))
     .then(res => {
       data = res.data;
       postId = itemId;

@@ -9,17 +9,17 @@ const passport = require('passport');
 const User = require('../models/User');
 
 //login
-router.get('/login',(req,res)=> res.render('login'));
+router.get('/login', (req, res) => res.render('login'));
 //register
-router.get('/register',(req,res)=> res.render('register'));
+router.get('/register', (req, res) => res.render('register'));
 
 //register handle
-router.post('/register',(req,res) => {
-const {name , email , password ,password2 } = req.body;
-let errors =[];
-// Check reaquired fields
+router.post('/register', (req, res) => {
+  const { name, email, password, password2 } = req.body;
+  let errors = [];
+  // Check reaquired fields
 
-if (!name || !email || !password || !password2) {
+  if (!name || !email || !password || !password2) {
     errors.push({ msg: 'Please enter all fields' });
   }
 
@@ -31,7 +31,7 @@ if (!name || !email || !password || !password2) {
     errors.push({ msg: 'Password must be at least 6 characters' });
   }
 
-if (errors.length > 0) {
+  if (errors.length > 0) {
     res.render('register', {
       errors,
       name,
@@ -50,7 +50,7 @@ if (errors.length > 0) {
           password,
           password2
         });
-      } 
+      }
       else {
         const newUser = new User({
           name,
@@ -59,28 +59,31 @@ if (errors.length > 0) {
         });
 
         bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) throw err;
-              newUser.password = hash;
-              newUser
-                .save()
-                .then(user => {
-                  req.flash(
-                    'success_msg',
-                    'You are now registered and can log in'
-                  );
-                  res.json({user:{id:user.id,
-                  name:user.name,
-                  email:user.email
-                  }});
-                })
-                .catch(err => console.log(err));
-            });
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => {
+                req.flash(
+                  'success_msg',
+                  'You are now registered and can log in'
+                );
+                res.json({
+                  user: {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                  }
+                });
+              })
+              .catch(err => console.log(err));
           });
-    }
-});
+        });
+      }
+    });
 
-}
+  }
 });
 
 // Login
@@ -99,4 +102,4 @@ router.get('/logout', (req, res) => {
   res.redirect('/users/login');
 });
 
-module.exports= router;
+module.exports = router;
