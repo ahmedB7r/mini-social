@@ -165,7 +165,6 @@ class ShoppingList extends Component {
                         <Input type="text"
                           name="comment"
                           placeholder="Add comment"
-                          value={this.state.comment}
                           onChange={this.onChange}
                           onClick={this.getId.bind(this, _id)}
                         />

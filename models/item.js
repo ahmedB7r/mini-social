@@ -11,7 +11,7 @@ const ItemSchema = new Schema({
     required: true
   },
   likes: [{
-    type: Schema.Types.ObjectId, ref: 'User', unique: true
+    type: Schema.Types.ObjectId, ref: 'User'
   }],
   comments: [{
     text: String,
