@@ -75,4 +75,33 @@ const comment = (req, res) => {
     }).catch(err => res.status(404).json({ success: false }));
 
 }
-module.exports = { getItems, createItem, deleteItem, editItem, like, unLike, comment };
+
+
+const postByID = (req, res, next, id) => {
+  Item.findById(id).populate('postedBy', '_id name').exec((err, Item) => {
+    if (err || !Item)
+      return res.status('400').json({
+        error: "Post not found"
+      })
+    req.Item = Item
+    next()
+  })
+}
+
+const isPoster = (req, res, next) => {
+  // Item.findById(req.params.id)
+
+  let isPoster = req.Item && req.user && req.Item.postedBy._id == req.user._id
+  console.log(req.Item)
+  if (!isPoster) {
+    return res.status('403').json({
+      error: "User is not authorized"
+    })
+  }
+  next()
+}
+
+
+
+
+module.exports = { postByID, getItems, createItem, deleteItem, editItem, like, unLike, comment, isPoster };

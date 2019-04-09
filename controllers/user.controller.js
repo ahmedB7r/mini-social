@@ -36,7 +36,7 @@ const signUp = (req, res) => {
           newUser.save()
             .then(user => {
               jwt.sign(
-                { id: user.id },
+                { _id: user.id },
                 config.get('jwtSecret'),
                 { expiresIn: 36000 },
                 (err, token) => {

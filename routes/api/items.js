@@ -22,7 +22,7 @@ router.route('/')
 // @desc    Delete A Item
 // @access  private
 router.route('/:id')
-  .delete(auth, itemCtrl.deleteItem);
+  .delete(auth, itemCtrl.isPoster, itemCtrl.deleteItem);
 
 
 
@@ -30,11 +30,8 @@ router.route('/:id')
 // @desc    edit A Item
 // @access  Public
 
-// @route   DELETE api/items/:id
-// @desc    Delete A Item
-// @access  private
 router.route('/:id')
-  .put(auth, itemCtrl.editItem);
+  .put(auth, itemCtrl.isPoster, itemCtrl.editItem);
 
 
 
@@ -62,6 +59,7 @@ router.route("/new/unlike")
 router.route("/new/comment/:id")
   .put(auth, itemCtrl.comment);
 
+router.param('id', itemCtrl.postByID)
 
 
 
